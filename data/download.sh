@@ -12,3 +12,4 @@ cat 20190719-0000-gleif-goldencopy-lei2-golden-copy.csv | cut -d',' -f1,2 | sed 
 mv 20190719-0000-gleif-goldencopy-rr-golden-copy.csv gleif_rr.csv
 
 rm *.zip
+ 
