@@ -4,11 +4,33 @@ from graph_builder import DirectNodeGraphWithParentNetworkBuilder
 
 @pytest.fixture
 def builder():
+    """Creates and returns an instance of DirectNodeGraphWithParentNetworkBuilder.
+    
+    Args:
+        None
+    
+    Returns:
+        DirectNodeGraphWithParentNetworkBuilder: A new instance of the DirectNodeGraphWithParentNetworkBuilder class.
+    """
     return DirectNodeGraphWithParentNetworkBuilder()
 
 def test_parent_subgraphs_are_copies(builder):
 
     #           UP <**
+    """
+    Test that parent subgraphs are independent copies of the original graph.
+    
+    This function tests the behavior of ultimate parent and node direct graph extraction
+    from a given graph structure. It verifies that the extracted subgraphs contain the
+    expected nodes and that the original graph remains unmodified.
+    
+    Args:
+        builder: The graph builder object used to extract subgraphs.
+    
+    Returns:
+        None: This function doesn't return anything. It uses assertions to verify
+        the correctness of the subgraph extraction process.
+    """
     #           |    *
     #         UP:C1  *
     #                *
@@ -23,6 +45,14 @@ def test_parent_subgraphs_are_copies(builder):
 
         RR('UP:C1', 'UP', RR.DIRECT),
     ])
+"""Tests the construction of a parent graph connected with ROI (Region of Interest).
+
+Args:
+    builder (object): An object with a method 'ultimate_parent_direct_graph' for building the parent graph.
+
+Returns:
+    None: This function doesn't return anything but uses assertions to verify the correctness of the graph.
+"""
 
     parent_graph, _ = builder.ultimate_parent_direct_graph(g, 'ROI')
     roi_graph = builder.node_direct_graph(g, 'ROI')
@@ -77,7 +107,15 @@ def test_graph_with_ROI_and_ultimate_parent_not_connected_via_direct_relationshi
     #          / \
     #         C1  C2
 
-    g = Graph([
+    """
+    Test the graph construction with ROI and ultimate parent not connected via direct relationships.
+    
+    Args:
+        builder (object): An instance of the graph builder class.
+    
+    Returns:
+        None: This function doesn't return anything explicitly. It uses assertions to verify the correct behavior of the graph construction.
+    """    g = Graph([
         RR('ROI', 'UP', RR.ULTIMATE),
         RR('ROI', 'P1', RR.DIRECT),
         RR('P1', 'UP', RR.ULTIMATE),  # <-- decoy; should also not make the graphs connected
@@ -130,7 +168,17 @@ def test_graph_with_ROI_and_ultimate_parent_not_connected_via_direct_relationshi
 def test_ROI_without_ultimate_parent(builder):
 
     # CASE: No Ultimate Parent
-    #          P2
+    """Test the ROI (Region of Interest) functionality without an ultimate parent.
+    
+    This function sets up a graph structure representing relationships between entities
+    and tests the behavior of the ROI builder when there is no ultimate parent present.
+    
+    Args:
+        builder: The builder object used to construct the ROI subgraph.
+    
+    Returns:
+        None: This function doesn't return anything, but uses assertions to verify the behavior.
+    """    #          P2
     #          |
     #     -----P1
     #    /     |

@@ -5,6 +5,16 @@ from algorithms.graph import RR, Graph
 
 class DirectNodeGraphWithParentNetworkBuilder:
     def __init__(self):
+        """Initialize a new instance of the class.
+        
+        This method doesn't take any arguments and doesn't perform any operations.
+        
+        Args:
+            None
+        
+        Returns:
+            None
+        """
         pass
 
     def build(self, g: Graph, node: str) -> Tuple[Graph, str]:
@@ -26,6 +36,16 @@ class DirectNodeGraphWithParentNetworkBuilder:
         return parent_graph.merge(node_graph), parent_node
 
     def node_direct_graph(self, g: Graph, node: str) -> Graph:
+        """
+        Creates a direct graph for a specific node from the given graph.
+        
+        Args:
+            g (Graph): The original graph to be processed.
+            node (str): The node for which the direct graph is to be created.
+        
+        Returns:
+            Graph: A new graph that is a direct subgraph of the input graph for the specified node, with ULTIMATE edge type removed.
+        """
         g = g.deepcopy()
         return g.remove_edge_type(RR.ULTIMATE).sub(node)
 
