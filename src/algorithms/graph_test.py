@@ -5,16 +5,59 @@ import pandas as pd
 
 @pytest.fixture
 def rr_test_csv(request):
-    return path.join(request.config.rootdir, 'src/test_data', 'rr-test.csv')
+    """Returns the path to the 'rr-test.csv' file in the test data directory.
+    
+    Args:
+        request (pytest.FixtureRequest): The pytest request object containing configuration information.
+"""Retrieves the path to the 'lei-test.csv' file in the test data directory.
+
+Args:
+    request (object): The pytest request object containing configuration information.
+
+Returns:
+    str: The full path to the 'lei-test.csv' file.
+"""
+    
+    Returns:
+        str: The absolute path to the 'rr-test.csv' file.
+    """    return path.join(request.config.rootdir, 'src/test_data', 'rr-test.csv')
 
 @pytest.fixture
 def lookup_test_csv(request):
     return path.join(request.config.rootdir, 'src/test_data', 'lei-test.csv')
 
 def test_RR():
+    """Tests the RR class functionality and its different relationship types.
+    
+    Args:
+        None
+    
+    Returns:
+        None: This function doesn't return anything, it uses assertions to verify the behavior of the RR class.
+    """
     rr = RR('LEI_1', 'LEI_2', RR.DIRECT)
+"""Test the creation of a Graph object from a CSV file.
 
+Args:
+    rr_test_csv (str): Path to the test CSV file containing relationship data.
+
+Returns:
+    None: This function doesn't return anything, it uses assertions to verify the graph structure.
+"""
     assert rr.start == 'LEI_1'
+    """Test the get_direct_parent and get_ultimate_parent methods of the Graph class.
+    
+    This function tests various scenarios for retrieving direct and ultimate parents
+    of nodes in a Graph object, including empty graphs and graphs with different
+    relationship configurations.
+    
+    Args:
+        None
+    
+    Returns:
+        None: This test function doesn't return anything, but uses assertions
+        to verify the correct behavior of the Graph methods.
+    """
     assert rr.end == 'LEI_2'
     assert rr.rel_type == 'IS_DIRECTLY_CONSOLIDATED_BY'
 
@@ -63,6 +106,14 @@ def test_node_get_direct_and_ultimate_parent():
     assert g.get_direct_parent('ROI') == 'P1'
     assert g.get_ultimate_parent('ROI') == 'UP1'
 
+    """Tests if a node has direct and ultimate parents in a graph.
+    
+    Args:
+        None
+    
+    Returns:
+        None: This function doesn't return anything explicitly. It uses assertions to check the behavior of the Graph class.
+    """
     # Catches inconsistency (more than one direct/ultimate parent)
     # TODO: Do while initializing graph?
 
@@ -84,6 +135,14 @@ def test_node_has_direct_and_ultimate_parent():
     assert not g.has_ultimate_parent('ROI')
 
     g = Graph([
+        """Tests the removal of edges with a specific type from a Graph object.
+        
+        Args:
+            None
+        
+        Returns:
+            None: This function doesn't return anything, but uses assertions to verify the correct behavior.
+        """
         RR('ROI', 'P1', RR.DIRECT),
         RR('ROI', 'UP1', RR.ULTIMATE),
     ])
@@ -108,10 +167,45 @@ def test_remove_edge_type():
     ]
 
 def test_lookup_read_in(lookup_test_csv):
+    """
+    Test the lookup table reading functionality of the Graph class.
+    
+    Args:
+        lookup_test_csv (str): Path to the CSV file containing lookup table data.
+    
+    """Tests the lookup functionality of the Graph class.
+    
+    Args:
+        rr_test_csv (str): Path to the CSV file containing test data for graph creation.
+        lookup_test_csv (str): Path to the CSV file containing lookup table data.
+    
+    """Tests the behavior of a Graph object when a node is not found in the graph.
+    
+    Args:
+        rr_test_csv (str): Path to the CSV file containing the graph data.
+        lookup_test_csv (str): Path to the CSV file containing the lookup table data.
+    
+    Returns:
+        None: This function doesn't return anything, it uses assertions to verify the expected behavior.
+    """
+    Returns:
+        None: This function doesn't return anything, it uses assertions to verify the lookup functionality.
+    """
+    Returns:
+        None: This function doesn't return anything, it uses assertions for testing.
+    """
     g = Graph([])
     Graph.set_lookup_table(lookup_test_csv)
 
-    assert isinstance(g.lookup_table, pd.DataFrame)
+    """Test node not found in graph and lookup table
+    
+    Args:
+        rr_test_csv (str): Path to the CSV file containing relationship data for graph creation
+        lookup_test_csv (str): Path to the CSV file containing lookup table data
+    
+    Returns:
+        None: This function uses assertions to verify the behavior when a node is not found
+    """    assert isinstance(g.lookup_table, pd.DataFrame)
 
 def test_lookup(rr_test_csv, lookup_test_csv):
     g = Graph.from_csv(rr_test_csv)
@@ -137,7 +231,18 @@ def test_node_not_found_in_G(rr_test_csv, lookup_test_csv):
         'no_parent': None,
     }]
 
-def test_node_not_found_in_G_and_lookup(rr_test_csv, lookup_test_csv):
+```
+"""Tests if a specific node is found in the graph and verifies graph structure.
+
+Args:
+    rr_test_csv (str): Path to the CSV file containing relationship data for graph construction.
+    lookup_test_csv (str): Path to the CSV file containing lookup table data.
+
+Returns:
+    None: This function uses assertions to validate the graph structure and node presence.
+"""
+
+```def test_node_not_found_in_G_and_lookup(rr_test_csv, lookup_test_csv):
     g = Graph.from_csv(rr_test_csv)
     g.set_lookup_table(lookup_test_csv)
 
@@ -158,6 +263,14 @@ def test_node_found_in_G(rr_test_csv, lookup_test_csv):
     g = Graph.from_csv(rr_test_csv)
     g.set_lookup_table(lookup_test_csv)
     a = g.sub('LEI_1').to_array()
+    """Test the Graph to array conversion functionality.
+    
+    Args:
+        lookup_test_csv (str): Path to the CSV file containing lookup data for Graph.
+    
+    Returns:
+        None: This function uses assertions to validate the behavior.
+    """
     nodes = a['nodes']
     edges = a['edges']
 
@@ -172,7 +285,17 @@ def test_Graph_to_array(lookup_test_csv):
         #  RR('LEI_1', 'LEI_3', RR.ULTIMATE),
 
         # TODO: More cases
+"""
+Test the subgraph functionality of the Graph class.
 
+This function creates a complex graph structure and tests various scenarios of subgraph extraction using the `sub` method of the Graph class. It verifies the correct nodes and edges are included in the resulting subgraphs.
+
+Args:
+    None
+
+Returns:
+    None: This function uses assertions to validate the subgraph results.
+"""
         #  RR('LEI_2', 'LEI_X', RR.DIRECT),
         #  RR('LEI_X', 'LEI_1', RR.ULTIMATE),
 
@@ -334,4 +457,12 @@ def test_Graph_subgraphs():
 
 @pytest.mark.skip("Direction not implemented")
 def test_Graph_direction():
+    """Tests the direction functionality of the Graph class.
+    
+    Args:
+        None
+    
+    Returns:
+        None: This test function uses assertions and does not return a value.
+    """
     assert False, "TODO: Implement MultiDiGraph"
